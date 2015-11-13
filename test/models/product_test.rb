@@ -18,18 +18,18 @@ class ProductTest < ActiveSupport::TestCase
 
     product.price = -1
     assert product.invalid?
-    assert_equal "must be greater than or equal to 0.01", product.errors[:price].join('; ')
+    assert_equal "は0.01以上の値を入力してください", product.errors[:price].join('; ')
 
     product.price = 0
     assert product.invalid?
-    assert_equal "must be greater than or equal to 0.01", product.errors[:price].join('; ')
+    assert_equal "は0.01以上の値を入力してください", product.errors[:price].join('; ')
 
     product.price = 1
     assert product.valid?
 
     product.price = 0.009
     assert product.invalid?
-    assert_equal "must be greater than or equal to 0.01", product.errors[:price].join('; ')
+    assert_equal "は0.01以上の値を入力してください", product.errors[:price].join('; ')
 
     product.price = 0.01
     assert product.valid?
@@ -64,5 +64,44 @@ class ProductTest < ActiveSupport::TestCase
     assert !product.save
     assert_equal "has already been taken", product.errors[:title].join('; ')
     # assert_equal I18n.translate('errors.messages.taken'),  product.errors[:title].join('; ')
+  end
+
+  test "title minimum 10 characters" do
+    product = products(:ruby)
+
+    product.title = "123456789"
+    assert product.invalid?
+    assert product.errors[:title].join(";").include?("10文字以上")
+
+    product.title = "あいうえおかきくけ"
+    assert product.invalid?
+
+    product.title = "1234567890"
+    assert product.valid?
+
+    # 全てが半角スペースの時は「空っぽ扱い」らしいよ！
+    product.title = "          "
+    assert product.invalid?, "#{product.title.size} characters"
+    assert product.errors[:title].join(";").include?("に値が入力されていません")
+
+    # 全てが全角スペースの時も「空っぽ扱い」らしいよ！
+    product.title = "　　　　　　　　　　"
+    assert product.invalid?, "#{product.title.size} characters"
+
+    product.title = "　  　　　  　 "
+    assert product.invalid?, "#{product.title.size} characters"
+
+    # 1文字でもスペース以外が含まれていたらvalidらしいよ！
+    product.title = "1         "
+    assert product.valid?, "#{product.title.size} characters"
+
+    product.title = "    1     "
+    assert product.valid?, "#{product.title.size} characters"
+
+    product.title = " 　  1　　   "
+    assert product.valid?, "#{product.title.size} characters"
+
+    product.title = "　  1　　   "
+    assert product.invalid?, "#{product.title.size} characters"
   end
 end
