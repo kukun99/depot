@@ -20,6 +20,9 @@
         <li><a href="#news">ニュース</a></li>
         <li><a href="#contact">お問い合わせ</a></li>
         <li><p><%= sanitize(@time) %></p></li>
+        <% if @cart %>
+        <li><p><%= link_to('カートを見る', cart_path(@cart)) %></p></li>
+        <% end %>
       </ul>
     </div>
     <div id="main">

@@ -11,5 +11,7 @@ class StoreController < ApplicationController
     if session[:counter] >= 5
       @counter = "<p>あなたはこのページを#{session[:counter]}回訪問しています。</p>"
     end
+
+    @cart = current_cart
   end
 end
