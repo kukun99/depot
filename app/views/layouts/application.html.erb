@@ -24,7 +24,17 @@
         <li><p><%= link_to('カートを見る', cart_path(@cart)) %></p></li>
         <% end %>
       </ul>
+
+      <% if session[:user_id] %>
+      <ul>
+        <li><%= link_to('注文',   orders_path)   %></li>
+        <li><%= link_to('商品',   products_path) %></li>
+        <li><%= link_to('ユーザ', users_path)    %></li>
+      </ul>
+      <%= button_to('ログアウト', logout_path, method: :delete) %>
+      <% end %>
     </div>
+
     <div id="main">
       <%= yield %>
     </div>
