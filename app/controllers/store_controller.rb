@@ -6,10 +6,11 @@ class StoreController < ApplicationController
       redirect_to(store_url(locale: params[:set_locale]))
     else
       @products = Product.order(:title)
-      @cart = current_cart
+      # @cart = current_cart
     end
 
     @products = Product.order(:title)
+    @cart = current_cart
 
     if session[:counter].nil?
       session[:counter] = 1
@@ -20,7 +21,5 @@ class StoreController < ApplicationController
     if session[:counter] >= 5
       @counter = "<p>あなたはこのページを#{session[:counter]}回訪問しています。</p>"
     end
-
-    @cart = current_cart
   end
 end
